@@ -1,0 +1,56 @@
+name: Seri GBP投稿
+
+on:
+  schedule:
+    # cron は UTC。JST = UTC+9。
+    # 月曜 08:00 JST = 日曜 23:00 UTC ／ 木曜 08:00 JST = 水曜 23:00 UTC
+    - cron: '0 23 * * 0,3'
+  workflow_dispatch:
+    inputs:
+      count:
+        description: '投稿する本数'
+        default: '1'
+      dry_run:
+        description: '試し打ち（実際には投稿しない）'
+        type: boolean
+        default: true
+
+concurrency:
+  group: seri-gbp-post
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+
+      - name: 投稿
+        working-directory: scripts
+        env:
+          GBP_CLIENT_ID: ${{ secrets.GBP_CLIENT_ID }}
+          GBP_CLIENT_SECRET: ${{ secrets.GBP_CLIENT_SECRET }}
+          GBP_REFRESH_TOKEN: ${{ secrets.GBP_REFRESH_TOKEN }}
+          GBP_ACCOUNT_ID: ${{ secrets.GBP_ACCOUNT_ID }}
+          GBP_LOCATION_ID: ${{ secrets.GBP_LOCATION_ID }}
+          IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
+          POST_COUNT: ${{ inputs.count || '1' }}
+          DRY_RUN: ${{ inputs.dry_run == true && '1' || '' }}
+        run: python post.py
+
+      - name: 投稿記録をコミット
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/
+          git diff --staged --quiet || git commit -m "GBP投稿記録を更新"
+          git pull --rebase --autostash
+          git push
