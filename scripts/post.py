@@ -1,4 +1,4 @@
-"""キューの次の1本を GBP に投稿する（GitHub Actions から月・木 08:00 JST に呼ばれる）。
+"""キューの次の1本を GBP に投稿する（GitHub Actions から定期的に呼ばれる。日時は post.yml）。
 
 環境変数:
   GBP_CLIENT_ID / GBP_CLIENT_SECRET / GBP_REFRESH_TOKEN  … OAuth（setup_auth.py で取得）
