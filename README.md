@@ -57,9 +57,8 @@ GBP API の申請・承認、API の有効化、OAuth クライアントの作�
 | Secret | `GBP_REFRESH_TOKEN` | みつむらと同じ値 |
 | Secret | `GBP_ACCOUNT_ID` | 手順2で表示されたアカウントID |
 | Secret | `GBP_LOCATION_ID` | 手順2で表示されたビジネスID（**Seri の行**） |
-| Variable | `IMAGE_BASE_URL` | `https://raw.githubusercontent.com/msk-kirin/seri-gbp-autopost/main/images` |
 
-画像は Google が URL から取りに行くので、誰でも開ける URL が必要。**このリポジトリは公開にして、画像をここから配信する**
+画像は Google が URL から取りに行くので、誰でも開ける URL が必要。画像の URL（`IMAGE_BASE_URL`）は post.yml に既定値として書いてあるので登録不要。**このリポジトリは公開にして、画像をここから配信する**
 （投稿文・画像・プログラムは公開される。API の鍵は Secrets に入れるので公開されない。`.env` は git に入らない）。
 
 ### 4. テスト投稿

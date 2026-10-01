@@ -40,7 +40,7 @@ jobs:
           GBP_REFRESH_TOKEN: ${{ secrets.GBP_REFRESH_TOKEN }}
           GBP_ACCOUNT_ID: ${{ secrets.GBP_ACCOUNT_ID }}
           GBP_LOCATION_ID: ${{ secrets.GBP_LOCATION_ID }}
-          IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL }}
+          IMAGE_BASE_URL: ${{ vars.IMAGE_BASE_URL || 'https://raw.githubusercontent.com/msk-kirin/seri-gbp-autopost/main/images' }}
           POST_COUNT: ${{ inputs.count || '1' }}
           DRY_RUN: ${{ inputs.dry_run == true && '1' || '' }}
         run: python post.py
